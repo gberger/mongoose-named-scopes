@@ -1,5 +1,5 @@
 {
-  "name": "mongoose-named-scopes",
+  "name": "mongoose-scopes",
   "version": "0.0.1",
   "description": "Define reusable, semantic Mongoose queries that can be chained",
   "main": "index.js",
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/gberger/mongoose-named-scopes/issues"
   },
-  "homepage": "https://github.com/gberger/mongoose-named-scopes#readme"
+  "homepage": "https://github.com/gberger/mongoose-named-scopes#readme",
+  "peerDependencies": {
+    "mongoose": "4.x"
+  }
 }
