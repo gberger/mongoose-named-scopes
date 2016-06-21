@@ -52,3 +52,13 @@ User.twenties().active().male().exec().then(...).catch(...);
 
 Enjoy!
 
+
+## Contributing
+
+Contributions are greatly appreciated!
+
+This is a very new library that extends Mongoose in some unusual ways.
+Please report bugs in the Issues.
+
+Feel free to develop additional features or fix bugs and send them over
+as Pull Requests.
