@@ -1,0 +1,26 @@
+{
+  "name": "mongoose-named-scopes",
+  "version": "0.0.1",
+  "description": "Define reusable, semantic Mongoose queries that can be chained",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gberger/mongoose-named-scopes.git"
+  },
+  "keywords": [
+    "mongoose",
+    "mongodb",
+    "query",
+    "scopes",
+    "rails"
+  ],
+  "author": "Guilherme Berger <guilherme.berger@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gberger/mongoose-named-scopes/issues"
+  },
+  "homepage": "https://github.com/gberger/mongoose-named-scopes#readme"
+}
