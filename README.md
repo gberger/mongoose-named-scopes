@@ -45,7 +45,7 @@ UserSchema.scope('active', function () {
 
 Now, use the named scopes as if they were query functions:
 
-``javascript
+```javascript
 User.olderThan(20).exec().then(...).catch(...);
 User.twenties().active().male().exec().then(...).catch(...);
 ```
