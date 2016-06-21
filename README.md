@@ -2,6 +2,12 @@
 
 :four_leaf_clover: Define reusable, semantic Mongoose queries that can be chained
 
+```javascript
+Product.category('men').available().mostRecent(10)
+User.male().olderThan(18).sortByAge().populateProfile()
+Todo.assignedTo(john).highPriority().project('mongoose').limit(5)
+```
+
 
 ## Usage
 
@@ -45,7 +51,7 @@ UserSchema.scope('active', function () {
 
 Now, use the named scopes as if they were query functions:
 
-```javascript
+``javascript
 User.olderThan(20).exec().then(...).catch(...);
 User.twenties().active().male().exec().then(...).catch(...);
 ```
