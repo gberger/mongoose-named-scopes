@@ -3,13 +3,13 @@
 :four_leaf_clover: Define chainable, semantic and composable Mongoose queries
 
 ```javascript
-// definition (placed in model)
+// Definition (placed in Scheme)
 ProductSchema.scope('available').where('available').equals(true);
 ProductSchema.scope('mostRecent', function(count) {
   return this.sort('-updatedAt').limit(10);
-}
+});
 
-// usage (called from anywhere)
+// Usage (called from anywhere)
 Product.category('men').available().mostRecent(10);
 User.male().olderThan(18).sortByAge().populateProfile();
 Task.assignedTo(john).highPriority().project('mongoose').limit(5);
@@ -22,14 +22,12 @@ First, you need to register the plugin into the schemas that you want to use it:
 
 ```javascript
 var namedScopesPlugin = require('mongoose-named-scopes');
+
+// For one Schema
 UserSchema.plugin(namedScopesPlugin);
-```
 
-You can also define it for all schemas at once:
-
-```javascript
-var namedScopesPlugin = require('./index');
-mongoose.plugin(require('./lastMod'));
+// For all Schemas at once
+mongoose.plugin(namedScopesPlugin);
 ```
 
 Then, use `schema.scope` (or `schema.namedScope`) to define your scopes:
@@ -63,17 +61,14 @@ UserSchema.scope('active', function () {
 Now, use the named scopes as if they were query functions:
 
 ```javascript
-// You can use .exec().then().catch()
-User.olderThan(20).exec().then(...).catch(...);
-
-// Or just .then().catch()
-User.twenties().active().male().then(...).catch(...);
-
 // You can specify more operators
-User.populate('children').olderThan(50).sort('age')...
+User.populate('children').olderThan(50).sort('age'); // ...
 
-// NOTE: scopes return an array of results unless you add findOne() to chain
-User.olderThan(100).findOne()...
+// Returning array results
+User.olderThan(20).exec().then((users) => {}).catch(err);
+
+// Returning single results
+User.olderThan(100).findOne().exec().then((users) => {}).catch(err);
 ```
 
 Enjoy!
