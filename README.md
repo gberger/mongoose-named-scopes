@@ -3,12 +3,13 @@
 :four_leaf_clover: Define chainable, semantic and composable Mongoose queries
 
 ```javascript
+// definition (placed in model)
 ProductSchema.scope('available').where('available').equals(true);
 ProductSchema.scope('mostRecent', function(count) {
   return this.sort('-updatedAt').limit(10);
 }
-// etc
 
+// usage (called from anywhere)
 Product.category('men').available().mostRecent(10);
 User.male().olderThan(18).sortByAge().populateProfile();
 Task.assignedTo(john).highPriority().project('mongoose').limit(5);
@@ -70,7 +71,7 @@ User.twenties().active().male().then(...).catch(...);
 // You can specify more operators
 User.populate('children').olderThan(50).sort('age')...
 
-// You can end it findOne
+// NOTE: scopes return an array of results unless you add findOne() to chain
 User.olderThan(100).findOne()...
 ```
 
