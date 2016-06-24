@@ -1,11 +1,17 @@
 # mongoose-named-scopes
 
-:four_leaf_clover: Define reusable, semantic Mongoose queries that can be chained
+:four_leaf_clover: Define chainable, semantic and composable Mongoose queries
 
 ```javascript
-Product.category('men').available().mostRecent(10)
-User.male().olderThan(18).sortByAge().populateProfile()
-Todo.assignedTo(john).highPriority().project('mongoose').limit(5)
+ProductSchema.scope('available').where('available').equals(true);
+UserSchema.scope('olderThan', function(age) {
+  return this.where('age').gt(age);
+}
+
+
+Product.category('men').available().mostRecent(10);
+User.male().olderThan(18).sortByAge().populateProfile();
+Task.assignedTo(john).highPriority().project('mongoose').limit(5);
 ```
 
 
@@ -28,7 +34,13 @@ mongoose.plugin(require('./lastMod'));
 Then, use `schema.scope` (or `schema.namedScope`) to define your scopes:
 
 ```javascript
+// You can define scopes by chaining operator calls
+UserSchema.scope('male').where('gender').equals('male');
+
+// Or you can pass a function, for when you want to have arguments
+// or need to use other statements
 UserSchema.scope('olderThan', function (age) {
+  // Be sure to return `this`!
   return this.where('age').gt(age);
 });
 
@@ -36,24 +48,30 @@ UserSchema.scope('youngerThan', function (age) {
   return this.where('age').lt(age);
 });
 
-UserSchema.scope('twenties', function() {
-  return this.olderThan(19).youngerThan(30);
-});
+// Scopes can make use of other scopes!
+UserSchema.scope('twenties').olderThan(19).youngerThan(20);
 
-UserSchema.scope('male', function() {
-  return this.where('gender', 'male');
-});
-
+// Heads up! We need to implement this as a function so that the
+// date parameter gets evaluated when you actually call the scope
 UserSchema.scope('active', function () {
-  return this.where('lastLogin').gte(+new Date - 24*60*60*1000)
+  return this.where('lastLogin').gte(+new Date() - 24*60*60*1000)
 });
 ```
 
 Now, use the named scopes as if they were query functions:
 
 ```javascript
+// You can use .exec().then().catch()
 User.olderThan(20).exec().then(...).catch(...);
-User.twenties().active().male().exec().then(...).catch(...);
+
+// Or just .then().catch()
+User.twenties().active().male().then(...).catch(...);
+
+// You can specify more operators
+User.populate('children').olderThan(50).sort('age')...
+
+// You can end it findOne
+User.olderThan(100).findOne()...
 ```
 
 Enjoy!
