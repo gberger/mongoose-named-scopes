@@ -5,7 +5,7 @@
 ```javascript
 ProductSchema.scope('available').where('available').equals(true);
 ProductSchema.scope('mostRecent', function(count) {
-  this.sort('-updatedAt').limit(10)
+  return this.sort('-updatedAt').limit(10);
 }
 // etc
 
