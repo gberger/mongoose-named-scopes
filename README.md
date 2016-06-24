@@ -4,10 +4,10 @@
 
 ```javascript
 ProductSchema.scope('available').where('available').equals(true);
-UserSchema.scope('olderThan', function(age) {
-  return this.where('age').gt(age);
+ProductSchema.scope('mostRecent', function(count) {
+  this.sort('-updatedAt').limit(10)
 }
-
+// etc
 
 Product.category('men').available().mostRecent(10);
 User.male().olderThan(18).sortByAge().populateProfile();
