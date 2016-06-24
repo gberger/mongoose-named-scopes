@@ -49,12 +49,13 @@ UserSchema.scope('youngerThan', function (age) {
 });
 
 // Scopes can make use of other scopes!
-UserSchema.scope('twenties').olderThan(19).youngerThan(20);
+UserSchema.scope('twenties').olderThan(19).youngerThan(30);
 
 // Heads up! We need to implement this as a function so that the
 // date parameter gets evaluated when you actually call the scope
 UserSchema.scope('active', function () {
-  return this.where('lastLogin').gte(+new Date() - 24*60*60*1000)
+  const yesterday = +new Date() - 24*60*60*1000;
+  return this.where('lastLogin').gte(yesterday);
 });
 ```
 
