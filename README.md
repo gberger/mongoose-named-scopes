@@ -18,6 +18,12 @@ Task.assignedTo(john).highPriority().project('mongoose').limit(5);
 
 ## Usage
 
+Install it with npm:
+
+```bash
+npm install --save mongoose-named-scopes
+```
+
 First, you need to register the plugin into the schemas that you want to use it:
 
 ```javascript
