@@ -58,20 +58,15 @@ module.exports = exports = function namedScopesPlugin (schema, options) {
       return fn.apply(this.find(), arguments);
     };
 
-    // Save this before we override it.
-    var oldQueryFn = Query.prototype[name];
-
     // Add function on the Query
     Query.prototype[name] = function() {
       // We are adding to Query.prototype, which is shared across all Schemas.
-      // We need to check if this query's schema is the one we are operating on.
-      if (this.schema === schema) {
+      // If this schema has a static with the same name, then 
+      if (this.schema.statics[name]) {
         // Good! Now apply the function.
-        return fn.apply(this, arguments);
+        return this.schema.statics[name].apply(this, arguments);
       } else {
-        // Not the schema we want. Luckily we saved the old function, so apply that.
-        // (Different schemas could have defined scopes that are named the same but operate differently.)
-        oldQueryFn.apply(this, arguments);
+        throw new TypeError('This Schema does not have a ' + name + ' named scope.')
       }
     };
 

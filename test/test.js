@@ -31,6 +31,7 @@ describe('namedScopesPlugin', () => {
 
 describe('namedScope', () => {
   var UserSchema;
+  var TaskSchema;
 
   beforeEach(() => {
     UserSchema = new Schema({
@@ -40,6 +41,11 @@ describe('namedScope', () => {
       parent: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     });
     UserSchema.plugin(namedScopesPlugin);
+
+    TaskSchema = new Schema({
+      body: String
+    });
+    TaskSchema.plugin(namedScopesPlugin);
   });
 
   describe('with a function', () => {
@@ -73,6 +79,29 @@ describe('namedScope', () => {
 
       assert(User.olderThan(20) instanceof mongoose.Query);
       assert(User.olderThan(20).olderThan(30) instanceof mongoose.Query);
+      done();
+    });
+
+    it('does not register functions for other schemas', done => {
+      UserSchema.scope('sortByAge', sortByAge);
+      const User = mongoose.model(modelName(), UserSchema);
+      const Task = mongoose.model(modelName(), TaskSchema);
+
+      assert.isUndefined(Task.sortByAge);
+      assert.throws(Task.find().sortByAge);
+      done();
+    });
+
+    it('works on discriminators', done => {
+      UserSchema.scope('olderThan', olderThan);
+      UserSchema.set('discriminatorKey', 'kind');
+      const User = mongoose.model(modelName(), UserSchema);
+      const Employee = User.discriminator(modelName(), new mongoose.Schema(
+        {job: String}, {discriminatorKey: 'kind'}
+      ));
+
+      assert(Employee.olderThan(20) instanceof mongoose.Query);
+      assert(Employee.olderThan(20).olderThan(30) instanceof mongoose.Query);
       done();
     });
 
@@ -114,6 +143,27 @@ describe('namedScope', () => {
       assert.deepEqual(q1.options, q2.options);
       done();
     });
+
+    it('handles scopes with the same name on different schemas', done => {
+      UserSchema.scope('sortByAge', sortByAge);
+      const User = mongoose.model(modelName(), UserSchema);
+      TaskSchema.scope('sortByAge', function() {
+        return this.where('body').equals('age');  // whatever
+      });
+      const Task = mongoose.model(modelName(), TaskSchema);
+
+      const uq1 = User.sortByAge();
+      const uq2 = User.find().sort('age');
+      assert.deepEqual(uq1.options, uq2.options);
+      assert.deepEqual(uq1._conditions, uq2._conditions);
+
+      const tq1 = Task.sortByAge();
+      const tq2 = Task.find({body: 'age'});
+      assert.deepEqual(tq1.options, tq2.options);
+      assert.deepEqual(tq1._conditions, tq2._conditions);
+      
+      done();
+    });
   });
 
 
@@ -139,15 +189,6 @@ describe('namedScope', () => {
 
       assert(User.underage() instanceof mongoose.Query);
       assert(User.underage().populateParent() instanceof mongoose.Query);
-      done();
-    });
-
-    it('starts chains even on non-.find scopes', done => {
-      UserSchema.scope('populateParent').populate('parent');
-      UserSchema.scope('underage').where('age').lt(18);
-      const User = mongoose.model(modelName(), UserSchema);
-
-      assert(User.populateParent().underage() instanceof mongoose.Query);
       done();
     });
 
