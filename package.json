@@ -1,6 +1,6 @@
 {
   "name": "mongoose-named-scopes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Define chainable, semantic and composable Mongoose queries",
   "main": "index.js",
   "scripts": {
