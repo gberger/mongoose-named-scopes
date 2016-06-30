@@ -61,9 +61,8 @@ module.exports = exports = function namedScopesPlugin (schema, options) {
     // Add function on the Query
     Query.prototype[name] = function() {
       // We are adding to Query.prototype, which is shared across all Schemas.
-      // If this schema has a static with the same name, then 
       if (this.schema.statics[name]) {
-        // Good! Now apply the function.
+        // If this schema has a static with the same name, then apply that function.
         return this.schema.statics[name].apply(this, arguments);
       } else {
         throw new TypeError('This Schema does not have a ' + name + ' named scope.')
