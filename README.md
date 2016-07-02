@@ -1,6 +1,6 @@
 # mongoose-named-scopes
 
-:four_leaf_clover: Define chainable, semantic and composable Mongoose queries
+:four_leaf_clover: Define custom, chainable Mongoose queries
 
 ```javascript
 // Definition (placed in Scheme)
