@@ -6,8 +6,12 @@
 // Definition (placed in Scheme)
 ProductSchema.scope('available').where('available').equals(true);
 ProductSchema.scope('mostRecent', function(count) {
-  return this.sort('-updatedAt').limit(10);
+  return this.sort('-updatedAt').limit(count);
 });
+ProductSchema.scope('category', function(cat) {
+  return this.where('category').equals(cat);
+};
+// etc
 
 // Usage (called from anywhere)
 Product.category('men').available().mostRecent(10);
@@ -42,7 +46,7 @@ Then, use `schema.scope` (or `schema.namedScope`) to define your scopes:
 // You can define scopes by chaining operator calls
 UserSchema.scope('male').where('gender').equals('male');
 
-// Or you can pass a function, for when you want to have arguments
+// Or you can pass a function, for when you want to have parameters
 // or need to use other statements
 UserSchema.scope('olderThan', function (age) {
   // Be sure to return `this`!
@@ -56,7 +60,7 @@ UserSchema.scope('youngerThan', function (age) {
 // Scopes can make use of other scopes!
 UserSchema.scope('twenties').olderThan(19).youngerThan(30);
 
-// Heads up! We need to implement this as a function so that the
+// Heads up! We need to implement this by passing a function so that the
 // date parameter gets evaluated when you actually call the scope
 UserSchema.scope('active', function () {
   const yesterday = +new Date() - 24*60*60*1000;
